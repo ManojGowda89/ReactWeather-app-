@@ -1,31 +1,27 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [location, setLocation] = useState("");
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
 
   function handleSearch(e) {
     e.preventDefault();
 
     axios
-      .get(`http://api.openweathermap.org/data/2.5/weather?q=${location}&appid=1c3440c30571f61d8ffe5fcc82c69d25`)
+      .get(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=1c3440c30571f61d8ffe5fcc82c69d25`)
       .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
-        alert('Enter Correct Location ' + error.message);
+        alert('Error fetching weather data: ' + error.message);
       });
   }
 
-  useEffect( ()=>{
-
-   setTimeout(() => {
-    handleGetLocationWeather()
-   }, 500);
-
-  },[])
+  useEffect(() => {
+    handleGetLocationWeather();
+  }, []); // Fetch location weather on component mount
 
   function handleGetLocationWeather() {
     if (navigator.geolocation) {
@@ -34,7 +30,7 @@ function App() {
         const longitude = position.coords.longitude;
 
         axios
-          .get(`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=1c3440c30571f61d8ffe5fcc82c69d25`)
+          .get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=1c3440c30571f61d8ffe5fcc82c69d25`)
           .then((response) => {
             setData(response.data);
           })
@@ -48,10 +44,10 @@ function App() {
   }
 
   const renderData = () => {
-    if (data) {
+    if (data && Object.keys(data).length !== 0) {
       return (
         <div className="weather-data" style={{ color: "white", fontFamily: "Arial, sans-serif" }}>
-          <h1> Weather Data</h1>
+          <h1>Weather Data</h1>
           <h3>
             Location : <span className="data-label">{data.name}</span>
           </h3>
@@ -92,19 +88,18 @@ function App() {
   return (
     <div>
       <br/>
-
       <center><h1 className="app-title" style={{ color: "white", fontFamily: "Arial, sans-serif" }}>Weather APP</h1></center>
       <div className="container border">
-
         <div className="mb-3">
           <br/>
           <form onSubmit={handleSearch}> 
-          <input type="text" className="form-control" placeholder="Enter location" value={location} onChange={(event) => setLocation(event.target.value)} required style={{ fontFamily: "Arial, sans-serif" }} />
-          <button type="submit" className="btn btn-primary mt-3" style={{ fontFamily: "Arial, sans-serif" }}>Search</button> {"  "}
-          <button className="btn btn-success mt-3" onClick={handleGetLocationWeather} style={{ fontFamily: "Arial, sans-serif" }}>Get Weather at My Location</button>{" "}
-          <button className="btn btn-danger mt-3" onClick={(e)=>{
-            e.preventDefault();
-            window.location.reload()}} style={{ fontFamily: "Arial, sans-serif" }}>New</button>
+            <input type="text" className="form-control" placeholder="Enter location" value={location} onChange={(event) => setLocation(event.target.value)} required style={{ fontFamily: "Arial, sans-serif" }} />
+            <button type="submit" className="btn btn-primary mt-3" style={{ fontFamily: "Arial, sans-serif" }}>Search</button>{" "}
+            <button className="btn btn-danger mt-3" onClick={(e) => {
+              e.preventDefault();
+              setLocation(""); // Clear location input
+              setData({}); // Clear weather data
+            }} style={{ fontFamily: "Arial, sans-serif" }}>New</button>
           </form>
         </div>
         {renderData()}

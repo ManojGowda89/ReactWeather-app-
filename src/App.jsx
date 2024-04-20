@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -61,23 +61,23 @@ function App() {
             Clouds: <span className="data-value">{data.weather ? data.weather[0].description : ""}</span>
           </h3>
           <h3>
-            Temperature : <span className="data-value">{data.main ? data.main.temp : ""}</span>
+            Temperature : <span className="data-value">{data.main ? (data.main.temp- 273.15 ).toFixed(2)+"C": ""}</span>
           </h3>
           <h4>
-            Minimum temperature : <span className="data-value">{data.main ? data.main.temp_min : ""}</span> {"  "}
-            Max temperature : <span className="data-value">{data.main ? data.main.temp_max : ""}</span>
+            Minimum temperature : <span className="data-value">{data.main ? (data.main.temp_min- 273.15 ).toFixed(2) +"C": ""}</span> {"  "}
+            Max temperature : <span className="data-value">{data.main ?( data.main.temp_max- 273.15 ).toFixed(2)+"C": ""}</span>
           </h4>
           <h3>
-            Pressure : <span className="data-value">{data.main ? data.main.pressure : ""}</span>
+            Pressure : <span className="data-value">{data.main ? data.main.pressure+"Psi" : ""}</span>
           </h3>
           <h3>
-            Humidity : <span className="data-value">{data.main ? data.main.humidity : ""}</span>
+            Humidity : <span className="data-value">{data.main ? data.main.humidity+"g/m3" : ""}</span>
           </h3>
           <h3>
-            Visibility : <span className="data-value">{data.visibility}</span>
+            Visibility : <span className="data-value">{data.visibility+"m"}</span>
           </h3>
           <h3>
-            Windspeed : <span className="data-value">{data.wind ? data.wind.speed : ""}</span>
+            Windspeed : <span className="data-value">{data.wind ? data.wind.speed+"m/s" : ""}</span>
           </h3>
         </div>
       );
